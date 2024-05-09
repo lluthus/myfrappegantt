@@ -105,6 +105,11 @@ export default class Gantt {
     this.$popup_wrapper = document.createElement("div");
     this.$popup_wrapper.classList.add("popup-wrapper");
     this.$container.appendChild(this.$popup_wrapper);
+    // cache index
+    task._index = i;
+    if (typeof task.custom_index === 'number') {
+      task._index = task.custom_index;
+    }
   }
 
   setup_options(options) {
