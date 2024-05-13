@@ -378,37 +378,39 @@ export default class Gantt {
   }
 
   make_grid_extras() {
-    //this.make_grid_highlights();
-    //this.make_grid_ticks();
+    this.make_grid_highlights();
+    this.make_grid_ticks();
   }
 
   make_grid_background() {
-    const distinct_rows = [...new Set(this.tasks.map(x => x.row_id))];
     const grid_width = this.dates.length * this.options.column_width;
-    const grid_height =
-            this.options.header_height +
-            this.options.padding +
-            (this.options.bar_height + this.options.padding) *
-                distinct_rows.length;
-    createSVG("rect", {
-      x: 0,
-      y: 0,
-      width: grid_width,
-      height: grid_height,
-      class: "grid-background",
-      append_to: this.$svg,
+    // check distinct rows so the grid height isn't relative to the total tasks
+    const distinct_rows = [...new Set(this.tasks.map(x => x.row_id))];
+    const grid_height =   
+        this.options.header_height +
+        this.options.padding +
+        (this.options.bar_height + this.options.padding) *
+            distinct_rows.length;
+
+    createSVG('rect', {
+        x: 0,
+        y: 0,
+        width: grid_width,
+        height: grid_height,
+        class: 'grid-background',
+        append_to: this.layers.grid,
     });
 
     $.attr(this.$svg, {
-      height: grid_height + this.options.padding + 100,
-      width: "100%",
+        // +XX is required so info is shown correctly - 50 seems like a good middle ground
+        height: grid_height + this.options.padding + 50, 
+        width: '100%',
     });
-  }
+}
 
   make_grid_rows() {
     let counter_rows = 0;
     const distinctRows = [...new Set(this.tasks.map(x => x.row_id))];
-    console.log(distinctRows.length)
     for (let row of distinctRows){
         counter_rows = counter_rows + 1;
     }
@@ -654,9 +656,9 @@ export default class Gantt {
       this.$current_highlight = this.create_el({ top, left, height, classes: 'current-highlight', append_to: this.$container })
       let $today = document.getElementById(date_utils.format(date).replaceAll(' ', '_'))
 
-      // $today.classList.add('current-date-highlight')
-      // $today.style.top = +$today.style.top.slice(0, -2) - 4 + 'px'
-      // $today.style.left = +$today.style.left.slice(0, -2) - 8 + 'px'
+      $today.classList.add('current-date-highlight')
+      $today.style.top = +$today.style.top.slice(0, -2) - 4 + 'px'
+      $today.style.left = +$today.style.left.slice(0, -2) - 8 + 'px'
     }
   }
 
@@ -916,7 +918,7 @@ export default class Gantt {
       }
 
       bar_wrapper.classList.add("active");
-      //this.popup.parent.classList.add('hidden')
+      this.popup.parent.classList.add('hidden')
 
       x_on_start = e.offsetX;
       y_on_start = e.offsetY;

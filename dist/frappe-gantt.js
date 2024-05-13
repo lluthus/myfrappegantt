@@ -1271,6 +1271,11 @@ var Gantt = (function () {
       this.$popup_wrapper = document.createElement("div");
       this.$popup_wrapper.classList.add("popup-wrapper");
       this.$container.appendChild(this.$popup_wrapper);
+      // cache index
+      //task._index = i;
+      //if (typeof task.row_id === 'number') {
+      //  task._index = task.row_id;
+      //}
     }
 
     setup_options(options) {
@@ -1316,6 +1321,9 @@ var Gantt = (function () {
 
         // cache index
         task._index = i;
+   if (typeof task.row_id === 'number') {
+        task._index = task.row_id;
+      }
 
         // invalid dates
         if (!task.start && !task.end) {
@@ -1536,17 +1544,18 @@ var Gantt = (function () {
     }
 
     make_grid_extras() {
-      this.make_grid_highlights();
-      this.make_grid_ticks();
+      //this.make_grid_highlights();
+      //this.make_grid_ticks();
     }
 
     make_grid_background() {
+      const distinct_rows = [...new Set(this.tasks.map(x => x.row_id))];
       const grid_width = this.dates.length * this.options.column_width;
       const grid_height =
-        this.options.header_height +
-        this.options.padding +
-        (this.options.bar_height + this.options.padding) * this.tasks.length;
-
+              this.options.header_height +
+              this.options.padding +
+              (this.options.bar_height + this.options.padding) *
+                  distinct_rows.length;
       createSVG("rect", {
         x: 0,
         y: 0,
@@ -1563,27 +1572,50 @@ var Gantt = (function () {
     }
 
     make_grid_rows() {
-      const rows_layer = createSVG("g", { append_to: this.layers.grid });
+      let counter_rows = 0;
+      const distinctRows = [...new Set(this.tasks.map(x => x.row_id))];
+      console.log(distinctRows.length);
+      for (let row of distinctRows){
+          counter_rows = counter_rows + 1;
+      }
+      console.log(counter_rows + " unique rows");
 
+      const rows_layer = createSVG('g', { append_to: this.layers.grid });
+      const lines_layer = createSVG('g', { append_to: this.layers.grid });
       const row_width = this.dates.length * this.options.column_width;
       const row_height = this.options.bar_height + this.options.padding;
 
       let row_y = this.options.header_height + this.options.padding / 2;
+      //var counter = 0;
 
-      for (let _ of this.tasks) {
-        createSVG("rect", {
-          x: 0,
-          y: row_y,
-          width: row_width,
-          height: row_height,
-          class: "grid-row",
-          append_to: rows_layer,
-        });
-        if (this.options.lines === 'both' || this.options.lines === 'horizontal') ;
+      for (let row of distinctRows) {
+          // console.log("for each log");
+          // console.log(counter);
+          // counter = counter + 1;
+          // console.log(counter);
+          // console.log('row id:' + task.row_id)
 
-        row_y += this.options.bar_height + this.options.padding;
+          createSVG('rect', {
+              x: 0,
+              y: row_y,
+              width: row_width,
+              height: row_height,
+              class: 'grid-row',
+              append_to: rows_layer
+          });
+
+          createSVG('line', { 
+              x1: 0,
+              y1: row_y + row_height,
+              x2: row_width,
+              y2: row_y + row_height,
+              class: 'row-line',
+              append_to: lines_layer
+          });
+
+          row_y += this.options.bar_height + this.options.padding;
       }
-    }
+  }
 
     make_grid_header() {
       document.querySelector('.grid-header');
@@ -1786,11 +1818,11 @@ var Gantt = (function () {
         const top = this.options.header_height + this.options.padding / 2;
         const height = (this.options.bar_height + this.options.padding) * this.tasks.length;
         this.$current_highlight = this.create_el({ top, left, height, classes: 'current-highlight', append_to: this.$container });
-        let $today = document.getElementById(date_utils.format(date).replaceAll(' ', '_'));
+        document.getElementById(date_utils.format(date).replaceAll(' ', '_'));
 
-        $today.classList.add('current-date-highlight');
-        $today.style.top = +$today.style.top.slice(0, -2) - 4 + 'px';
-        $today.style.left = +$today.style.left.slice(0, -2) - 8 + 'px';
+        // $today.classList.add('current-date-highlight')
+        // $today.style.top = +$today.style.top.slice(0, -2) - 4 + 'px'
+        // $today.style.left = +$today.style.left.slice(0, -2) - 8 + 'px'
       }
     }
 
@@ -2050,7 +2082,7 @@ var Gantt = (function () {
         }
 
         bar_wrapper.classList.add("active");
-        this.popup.parent.classList.add('hidden');
+        //this.popup.parent.classList.add('hidden')
 
         x_on_start = e.offsetX;
         y_on_start = e.offsetY;

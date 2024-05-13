@@ -378,8 +378,8 @@ export default class Gantt {
   }
 
   make_grid_extras() {
-    //this.make_grid_highlights();
-    //this.make_grid_ticks();
+    this.make_grid_highlights();
+    this.make_grid_ticks();
   }
 
   make_grid_background() {
@@ -916,7 +916,7 @@ export default class Gantt {
       }
 
       bar_wrapper.classList.add("active");
-      //this.popup.parent.classList.add('hidden')
+      this.popup.parent.classList.add('hidden')
 
       x_on_start = e.offsetX;
       y_on_start = e.offsetY;

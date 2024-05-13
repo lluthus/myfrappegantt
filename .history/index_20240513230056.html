@@ -34,56 +34,54 @@
     <script>
       let tasks = [
         {
-          row_id:0,
         	start: '2024-04-01',
         	end: '2024-04-01',
         	name: 'Redesign website',
-        	id: "Task 1",
+        	id: "Task 0",
         	progress: 30
         },
         {
-          row_id:1,
         	start: '2024-03-26',
           // Utilizes duration
         	duration: '6d',
         	name: 'Write new content',
-        	id: "Task 0",
+        	id: "Task 1",
         	progress: 5,
           important: true
         },
         {
-          row_id: 0,
         	start: '2024-04-04',
         	end: '2024-04-08',
         	name: 'Apply new styles',
         	id: "Task 2",
-        	progress: 80
-         }//,
-        // {
-        // 	start: '2024-04-08',
-        // 	end: '2024-04-09',
-        // 	name: 'Review',
-        // 	id: "Task 3",
-        // 	progress: 5,
-        // 	dependencies: 'Task 2'
-        // },
-        // {
-        // 	start: '2024-04-08',
-        // 	end: '2024-04-10',
-        // 	name: 'Deploy',
-        // 	id: "Task 4",
-        // 	progress: 0,
-        // 	// dependencies: 'Task 2'
-        // },
-        // {
-        // 	start: '2024-04-21',
-        // 	end: '2024-04-29',
-        // 	name: 'Go Live!',
-        // 	id: "Task 5",
-        // 	progress: 0,
-        // 	dependencies: 'Task 2',
-        // 	custom_class: 'bar-milestone'
-        // },
+        	progress: 80,
+        	dependencies: 'Task 1'
+        },
+        {
+        	start: '2024-04-08',
+        	end: '2024-04-09',
+        	name: 'Review',
+        	id: "Task 3",
+        	progress: 5,
+        	dependencies: 'Task 2'
+        },
+        {
+        	start: '2024-04-08',
+        	end: '2024-04-10',
+        	name: 'Deploy',
+        	id: "Task 4",
+        	progress: 0,
+        	// dependencies: 'Task 2'
+        },
+        {
+        	start: '2024-04-21',
+        	end: '2024-04-29',
+        	name: 'Go Live!',
+        	id: "Task 5",
+        	progress: 0,
+        	dependencies: 'Task 2',
+        	custom_class: 'bar-milestone'
+        },
         // {
         // 	start: '2014-01-05',
         // 	end: '2019-10-12',
@@ -94,7 +92,7 @@
       ];
 
       // Uncomment to test fixed header
-      //tasks = [...tasks, ...Array.from({length: tasks.length * 3}, (_, i) => ({...tasks[i % 3], id: i}))]
+      tasks = [...tasks, ...Array.from({length: tasks.length * 3}, (_, i) => ({...tasks[i % 3], id: i}))]
       
       let gantt_chart = new Gantt(".gantt-target", tasks, {
         on_click: (task) => {

@@ -378,18 +378,17 @@ export default class Gantt {
   }
 
   make_grid_extras() {
-    //this.make_grid_highlights();
-    //this.make_grid_ticks();
+    this.make_grid_highlights();
+    this.make_grid_ticks();
   }
 
   make_grid_background() {
-    const distinct_rows = [...new Set(this.tasks.map(x => x.row_id))];
     const grid_width = this.dates.length * this.options.column_width;
     const grid_height =
-            this.options.header_height +
-            this.options.padding +
-            (this.options.bar_height + this.options.padding) *
-                distinct_rows.length;
+      this.options.header_height +
+      this.options.padding +
+      (this.options.bar_height + this.options.padding) * this.tasks.length;
+
     createSVG("rect", {
       x: 0,
       y: 0,
@@ -408,7 +407,6 @@ export default class Gantt {
   make_grid_rows() {
     let counter_rows = 0;
     const distinctRows = [...new Set(this.tasks.map(x => x.row_id))];
-    console.log(distinctRows.length)
     for (let row of distinctRows){
         counter_rows = counter_rows + 1;
     }
@@ -654,9 +652,9 @@ export default class Gantt {
       this.$current_highlight = this.create_el({ top, left, height, classes: 'current-highlight', append_to: this.$container })
       let $today = document.getElementById(date_utils.format(date).replaceAll(' ', '_'))
 
-      // $today.classList.add('current-date-highlight')
-      // $today.style.top = +$today.style.top.slice(0, -2) - 4 + 'px'
-      // $today.style.left = +$today.style.left.slice(0, -2) - 8 + 'px'
+      $today.classList.add('current-date-highlight')
+      $today.style.top = +$today.style.top.slice(0, -2) - 4 + 'px'
+      $today.style.left = +$today.style.left.slice(0, -2) - 8 + 'px'
     }
   }
 
@@ -916,7 +914,7 @@ export default class Gantt {
       }
 
       bar_wrapper.classList.add("active");
-      //this.popup.parent.classList.add('hidden')
+      this.popup.parent.classList.add('hidden')
 
       x_on_start = e.offsetX;
       y_on_start = e.offsetY;
